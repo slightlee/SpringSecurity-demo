@@ -5,13 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.jwt.crypto.sign.MacSigner;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
 
 /**
   * 认证服务配置
@@ -58,7 +61,30 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
              .userDetailsService(userDetailsService)
+                .tokenStore(tokenStore())
+             .accessTokenConverter(jwtAccessTokenConverter())
         ;
     }
+
+
+    /**
+     *  创建 tokenStore对象（令牌存储对象） token以什么形式存储
+     */
+    public TokenStore tokenStore(){
+        return new JwtTokenStore(jwtAccessTokenConverter());
+    }
+
+    /**
+     * 签名验证和解析提供转换器
+     */
+    public JwtAccessTokenConverter jwtAccessTokenConverter(){
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        // 签名密钥
+        jwtAccessTokenConverter.setSigningKey("mingtian");
+        // 验证时使⽤的密钥，和签名密钥保持⼀致
+        jwtAccessTokenConverter.setVerifier(new MacSigner("mingtian"));
+        return jwtAccessTokenConverter;
+    }
+
 
 }
