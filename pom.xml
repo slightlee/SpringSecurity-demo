@@ -22,6 +22,8 @@
         <spring-boot.version>2.4.2</spring-boot.version>
         <!-- SpringCloud版本号 -->
         <spring-cloud.version>2020.0.3</spring-cloud.version>
+        <!-- mybatis-plus -->
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
 
     </properties>
 
