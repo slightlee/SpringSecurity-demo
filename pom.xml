@@ -24,6 +24,8 @@
         <spring-cloud.version>2020.0.3</spring-cloud.version>
         <!-- mybatis-plus -->
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <!-- hutool  -->
+        <hutool.version>5.7.7</hutool.version>
 
     </properties>
 
